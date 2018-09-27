@@ -20,10 +20,10 @@ public class ServerOfFile {
 				byte[] echoRequestData = echoRequest.getData();
 				int echoRequestLength = echoRequest.getLength();
 				int flag = 0;
-				try (FileOutputStream fout = new FileOutputStream(echoRequestData.toString())) {
-						
+				File file = new File("c:\\Users\\USER\\Desktop\\recebido.txt");
+				try (FileOutputStream fout = new FileOutputStream(file)) {
+
 					while (echoRequest.getLength() > 0) {
-						System.out.println("hi");
 						socket.receive(echoRequest);
 						System.out.println("im here");
 						echoRequestData = echoRequest.getData();
