@@ -20,8 +20,10 @@ public class ServerOfFile {
 				byte[] echoRequestData = echoRequest.getData();
 				int echoRequestLength = echoRequest.getLength();
 				int flag = 0;
-				
-				File file = new File("c:\\Users\\USER\\Desktop\\reee.txt");
+				String filename = new String(echoRequestData);
+				System.out.println("c:\\Users\\USER\\Desktop\\" + filename);
+				File file = new File("c:\\Users\\USER\\Desktop\\" + filename);
+				System.out.println(file.canWrite());
 				try (FileOutputStream fout = new FileOutputStream(file)) {
 					System.out.println(echoRequestLength);
 					do {

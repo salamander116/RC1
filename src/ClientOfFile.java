@@ -6,7 +6,7 @@ public class ClientOfFile {
 
 	public static void main(String[] args) throws Exception {
 
-		File file = new File("C:\\Users\\USER\\Desktop\\1.txt");
+		File file = new File("C:\\Users\\USER\\Desktop\\IA\\1.txt");
 
 		String servidor = args[0];
 		int port = Integer.parseInt(args[1]);
