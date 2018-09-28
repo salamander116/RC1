@@ -1,11 +1,12 @@
 import java.io.*;
-import java.net.*;;
+import java.net.*;
+import java.util.Arrays;;
 
 public class ClientOfFile {
 
 	public static void main(String[] args) throws Exception {
 
-		File file = new File("c:\\Users\\USER\\Desktop\\tpc1.txt");
+		File file = new File("C:\\Users\\USER\\Desktop\\1.txt");
 
 		String servidor = args[0];
 		int port = Integer.parseInt(args[1]);
@@ -21,25 +22,28 @@ public class ClientOfFile {
 						port);
 				socket.send(echoRequest);
 
-				Thread.sleep(100);
+				Thread.sleep(500);
 
 				
 				while (fin.available() > 0) {
 					byte[] bffr = new byte[5000];
 					if (fin.available() > 1024) {
-						System.out.println("fek");
-
+						System.out.println(fin.available());
 						fin.read(bffr, 0, 1024);
-						echoRequest = new DatagramPacket(bffr, bffr.length, serverAddress, port);
+						System.out.println(fin.available());
+						echoRequest = new DatagramPacket(bffr, 1024, serverAddress, port);
 						socket.send(echoRequest);
-						Thread.sleep(100);
+						Thread.sleep(500);
 					} else {
-						System.out.println("fek2");
-
+						System.out.println("---->" + fin.available());
+						int leftOver = fin.available();
 						fin.read(bffr, 0, fin.available());
-						echoRequest = new DatagramPacket(bffr, bffr.length, serverAddress, port);
+						System.out.println("---->" + fin.available());
+						echoRequest = new DatagramPacket(bffr, leftOver, serverAddress, port);
 						socket.send(echoRequest);
-						Thread.sleep(100);
+						Thread.sleep(500);
+						echoRequest = new DatagramPacket(bffr, 0, serverAddress, port);
+						//socket.send(echoRequest);
 					}
 
 				}
@@ -50,7 +54,8 @@ public class ClientOfFile {
 				socket.receive(echoReply);
 
 				if (echoReply.getLength() > 0) {
-					System.out.println(echoReply.getData().toString());
+					String s = new String(echoReply.getData());
+					System.out.println(s);
 				}
 
 			}

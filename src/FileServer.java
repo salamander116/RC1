@@ -1,49 +1,49 @@
-import java.io.*;
-import java.net.*;
+import java.io.FileOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
-public class ServerOfFile {
+public class FileServer {
 
 	static final int PORT = 8000;
 
 	public static void main(String[] args) throws Exception {
 
-		
+		// create input / output UDP socket
 		try (DatagramSocket socket = new DatagramSocket(PORT)) {
 
 			for (;;) { // server endless loop
-				
+				// wait for an incoming datagram
 				byte[] buffer = new byte[65536];
 				DatagramPacket echoRequest = new DatagramPacket(buffer, buffer.length);
-				
+				// get it
 				socket.receive(echoRequest);
-				
+				// get UDP datagram payload
 				byte[] echoRequestData = echoRequest.getData();
 				int echoRequestLength = echoRequest.getLength();
 				int flag = 0;
-				
-				File file = new File("c:\\Users\\USER\\Desktop\\reee.txt");
-				try (FileOutputStream fout = new FileOutputStream(file)) {
-					System.out.println(echoRequestLength);
-					do {
+				try (FileOutputStream fout = new FileOutputStream(echoRequestData.toString())) {
+					
+					while (echoRequest.getLength() > 0) {
+						System.out.println("hi");
 						socket.receive(echoRequest);
+						System.out.println("im here");
 						echoRequestData = echoRequest.getData();
 						echoRequestLength = echoRequest.getLength();
-						if(echoRequestLength > 0)
-						fout.write(echoRequestData, 0, echoRequestLength);
-						Thread.sleep(500);
-						System.out.println("Recebi: " + echoRequestLength);
+						int sizeReceived = echoRequestLength;
+						fout.write(echoRequestData);
+						Thread.sleep(1);
+						System.out.println("Recebi: " + sizeReceived);
 						flag++;
-					}while (echoRequest.getLength() >= 1024);
-
-					System.out.println(echoRequestLength);
-
+					}
 					if (flag > 0) {
-						String doneD = "File sent";
+						String doneD = "File received";
 						System.out.println(doneD);
 						byte[] byteArray = doneD.getBytes();
 						DatagramPacket echoReply = new DatagramPacket(byteArray, byteArray.length);
+						// as well as destination IP address and port
 						echoReply.setAddress(echoRequest.getAddress());
 						echoReply.setPort(echoRequest.getPort());
+						// send reply
 						socket.send(echoReply);
 						flag = 0;
 					}
@@ -54,3 +54,5 @@ public class ServerOfFile {
 	}
 
 }
+
+
