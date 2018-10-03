@@ -1,15 +1,16 @@
 import java.io.*;
 import java.net.*;
 
+
 public class ServerOfFile {
 
 	static final int PORT = 8000;
 
 	public static void main(String[] args) throws Exception {
 
-		
-		try (DatagramSocket socket = new DatagramSocket(PORT)) {
-
+		MyDatagramSocket.init(1, 0);
+		try (MyDatagramSocket socket = new MyDatagramSocket(PORT) ){
+			
 			for (;;) { // server endless loop
 				
 				byte[] buffer = new byte[65536];
@@ -17,14 +18,12 @@ public class ServerOfFile {
 				
 				socket.receive(echoRequest);
 				
+				
 				byte[] echoRequestData = echoRequest.getData();
 				int echoRequestLength = echoRequest.getLength();
 				int flag = 0;
-				String filename = new String(echoRequestData);
-				System.out.println("c:\\Users\\USER\\Desktop\\" + filename);
-				File file = new File("c:\\Users\\USER\\Desktop\\" + filename);
-				System.out.println(file.canWrite());
-				try (FileOutputStream fout = new FileOutputStream(file)) {
+				//String filename = new String(echoRequestData);
+				try (FileOutputStream fout = new FileOutputStream("C:\\Users\\USER\\Desktop\\"+"reeee.jpg")) {
 					System.out.println(echoRequestLength);
 					do {
 						socket.receive(echoRequest);

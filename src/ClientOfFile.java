@@ -1,19 +1,26 @@
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;;
 
 public class ClientOfFile {
 
 	public static void main(String[] args) throws Exception {
 
-		File file = new File("C:\\Users\\USER\\Desktop\\IA\\1.txt");
-
+		File file = new File("C:\\Users\\USER\\Desktop\\jpeg.jpg");
+		
+		 Queue<DatagramPacket> qPackets = new LinkedList<DatagramPacket>();
+		 
 		String servidor = args[0];
 		int port = Integer.parseInt(args[1]);
 		InetAddress serverAddress = InetAddress.getByName(servidor);
 
 		try (DatagramSocket socket = new DatagramSocket()) {
-
+			
+			socket.setSoTimeout(500);
+			
+			try {
 			byte[] sendingBuffer = file.getName().getBytes();
 
 			try (FileInputStream fin = new FileInputStream(file)) {
@@ -23,7 +30,7 @@ public class ClientOfFile {
 				socket.send(echoRequest);
 
 				Thread.sleep(500);
-
+				
 				
 				while (fin.available() > 0) {
 					byte[] bffr = new byte[5000];
@@ -32,7 +39,9 @@ public class ClientOfFile {
 						fin.read(bffr, 0, 1024);
 						System.out.println(fin.available());
 						echoRequest = new DatagramPacket(bffr, 1024, serverAddress, port);
+						qPackets.add(echoRequest);
 						socket.send(echoRequest);
+						Thread.currentThread().n
 						Thread.sleep(500);
 					} else {
 						System.out.println("---->" + fin.available());
@@ -60,6 +69,11 @@ public class ClientOfFile {
 
 			}
 
+			}catch(SocketTimeoutException e) {
+				
+				//socket.send();
+				
+			}
 		}
 	}
 
